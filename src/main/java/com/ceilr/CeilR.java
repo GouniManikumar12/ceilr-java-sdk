@@ -1,4 +1,4 @@
-package main.java.com.ceilr;
+package com.ceilr;
 
 import com.ceilr.utils.HttpClient;
 import com.ceilr.exceptions.CeilRException;
@@ -27,7 +27,7 @@ public class CeilR {
             String response = httpClient.post(BASE_URL + "/check-feature", payload.toString());
             JSONObject jsonResponse = new JSONObject(response);
             return jsonResponse.optBoolean("allowed", false);
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new CeilRException("Failed to check feature", e);
         }
     }
@@ -41,7 +41,7 @@ public class CeilR {
             payload.put("count", count);
 
             httpClient.post(BASE_URL + "/track-usage", payload.toString());
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new CeilRException("Failed to track usage", e);
         }
     }
@@ -51,7 +51,7 @@ public class CeilR {
             String response = httpClient.get(BASE_URL + "/user-entitlements", apiKey);
             JSONObject jsonResponse = new JSONObject(response);
             return jsonResponse.optJSONArray("entitlements").toList().toArray(new String[0]);
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new CeilRException("Failed to fetch entitlements", e);
         }
     }

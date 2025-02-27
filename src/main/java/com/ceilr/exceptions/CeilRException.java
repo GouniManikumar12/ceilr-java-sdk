@@ -1,4 +1,4 @@
-package main.java.com.ceilr.exceptions;
+package com.ceilr.exceptions;
 
 public class CeilRException extends Exception {
     public CeilRException(String message) {

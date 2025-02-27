@@ -1,36 +1,40 @@
-package main.java.com.ceilr.utils;
+package com.ceilr.utils;
 
-import okhttp3.*;
-
-import java.io.IOException;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 
 public class HttpClient {
-    private final OkHttpClient client;
+    private static final OkHttpClient client = new OkHttpClient();
+    public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
-    public HttpClient() {
-        this.client = new OkHttpClient();
+    public static String get(String url, String apiKey) throws Exception {
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Authorization", "Bearer " + apiKey)
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                throw new Exception("Unexpected code " + response);
+            }
+            return response.body().string();
+        }
     }
 
-    public String post(String url, String jsonPayload) throws IOException {
-        RequestBody body = RequestBody.create(jsonPayload, MediaType.get("application/json"));
+    public static String post(String url, String json) throws Exception {
+        RequestBody body = RequestBody.create(json, JSON);
         Request request = new Request.Builder()
                 .url(url)
                 .post(body)
                 .build();
 
         try (Response response = client.newCall(request).execute()) {
-            return response.body().string();
-        }
-    }
-
-    public String get(String url, String apiKey) throws IOException {
-        Request request = new Request.Builder()
-                .url(url)
-                .header("Authorization", "Bearer " + apiKey)
-                .get()
-                .build();
-
-        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                throw new Exception("Unexpected code " + response);
+            }
             return response.body().string();
         }
     }
